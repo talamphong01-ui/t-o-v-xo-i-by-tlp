@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <title>Trò chơi Xúc xắc May mắn</title>
+    <style>
+        body { font-family: sans-serif; text-align: center; padding: 50px; }
+        .container { max-width: 400px; margin: auto; border: 1px solid #ccc; padding: 20px; border-radius: 10px; }
+        input, button { padding: 10px; margin: 5px; }
+        #result { font-weight: bold; margin-top: 20px; font-size: 1.2em; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>Trò chơi Xúc xắc</h2>
+    <p>Số dư: <span id="balance">1000</span> VNĐ</p>
+    
+    <input type="number" id="betAmount" placeholder="Số tiền đặt cược">
+    <br>
+    <button onclick="play('tao')">Đặt Táo (>10)</button>
+    <button onclick="play('xoai')">Đặt Xoài (<=10)</button>
+
+    <div id="diceResult"></div>
+    <div id="result"></div>
+</div>
+
+<script>
+    let balance = 1000;
+
+    function play(choice) {
+        let bet = parseInt(document.getElementById('betAmount').value);
+        
+        if (isNaN(bet) || bet <= 0) { alert("Vui lòng nhập số tiền cược hợp lệ!"); return; }
+        if (bet > balance) { alert("Không đủ tiền!"); return; }
+
+        // Tung 3 con xúc xắc (mỗi con từ 1-6)
+        let d1 = Math.floor(Math.random() * 6) + 1;
+        let d2 = Math.floor(Math.random() * 6) + 1;
+        let d3 = Math.floor(Math.random() * 6) + 1;
+        let sum = d1 + d2 + d3;
+        
+        let outcome = (sum > 10) ? 'tao' : 'xoai';
+        document.getElementById('diceResult').innerHTML = `Kết quả xúc xắc: ${d1} + ${d2} + ${d3} = <b>${sum}</b>`;
+
+        if (choice === outcome) {
+            let winAmount = Math.floor(bet * 0.9);
+            balance += winAmount;
+            document.getElementById('result').style.color = "green";
+            document.getElementById('result').innerText = `Chúc mừng! Ra ${outcome === 'tao' ? 'Táo' : 'Xoài'}. Bạn thắng ${winAmount} VNĐ.`;
+        } else {
+            balance -= bet;
+            document.getElementById('result').style.color = "red";
+            document.getElementById('result').innerText = `Tiếc quá! Ra ${outcome === 'tao' ? 'Táo' : 'Xoài'}. Bạn mất ${bet} VNĐ.`;
+        }
+
+        document.getElementById('balance').innerText = balance;
+        if (balance <= 0) { alert("Bạn đã hết tiền!"); }
+    }
+</script>
+
+</body>
+</html>
